@@ -10,25 +10,31 @@ docker pull rtugeek/monitor-server
 docker run -d -p 3000:3000 rtugeek/monitor-server
 ```
 
-IMPORTANT!: Add the token to the request header or search params in every request.
+### IMPORTANT!
 
-```bash
+The **token** must be included in the request header or query parameters; otherwise, the request will fail authentication.
+
+Token is generated when the server starts, you can see it in the console log.
+
 ```shell
+...
+[Nest] LOG [NestApplication] Nest application successfully started +1ms
 [Nest] LOG [APP] Server port: 3000
 [Nest] LOG [APP] Add the follow token to http request header or search params
 [Nest] LOG [APP] ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-[Nest] LOG [APP] sjq2eqcob0irqvs7rm21oxh8zh9zp1ya 👈
+[Nest] LOG [APP] sjq2eqcob0irqvs7rm21oxh8zh9zp1ya 👈 token is here
 [Nest] LOG [APP] ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 [Nest] LOG [APP] Open http://localhost:3000/api to see the api doc
 ```
 
 ### Request Example
-```http request
-# Get os info
-GET http://localhost:3000/os?token=sjq2eqcob0irqvs7rm21oxh8zh9zp1ya
-```
+
 View Api Doc at http://localhost:3000/api
 ![Swagger UI](img.png)
+
+```http request
+GET http://localhost:3000/os?token=sjq2eqcob0irqvs7rm21oxh8zh9zp1ya
+```
 
 ### Reset token
 
