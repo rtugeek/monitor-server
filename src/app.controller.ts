@@ -1,5 +1,6 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common'
+import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
+import { Request } from 'express'
 import * as si from 'systeminformation'
 import { Systeminformation } from 'systeminformation'
 import { AuthGuard } from './auth.guard'
@@ -25,16 +26,25 @@ export class AppController {
     return si.osInfo()
   }
 
-  @ApiResponse({ example: Example.statsBasic })
-  @ApiOperation({ summary: 'Get basic system stats: memory, CPU load, and network stats' })
-  @Get('/stats/basic')
-  async stats() {
-    return si.get({
-      mem: '*',
-      currentLoad:
-        'avgLoad,currentLoad,currentLoadUser,currentLoadIdle,currentLoadSystem',
-      networkStats: '*',
-    })
+  // @ApiOperation({ tags: ['OS'], externalDocs: { url: 'https://systeminformation.io/os.html', description: 'View systeminformation os section for more details' } })
+  // @Get('/stats/basic')
+  // async stats() {
+  //   return si.get({
+  //     mem: '*',
+  //     currentLoad:
+  //       'avgLoad,currentLoad,currentLoadUser,currentLoadIdle,currentLoadSystem',
+  //     fsSize: '*',
+  //   })
+  // }
+
+  @ApiOperation({
+    description: 'Get partial data at once. e.g. http://127.0.0.1:5549/api/monitor?token=sjq2eqcob0irqvs7rm21oxh8zh9zp1ya&cpu=*&currentLoad=avgLoad,currentLoad,currentLoadUser,currentLoadIdle,currentLoadSystem',
+    externalDocs: { url: 'https://systeminformation.io/os.html', description: 'View systeminformation document for more details',
+    },
+  })
+  @Get('')
+  async get(@Req() request: Request) {
+    return si.get(request.query)
   }
 
   @ApiOperation({ tags: ['OS'], externalDocs: { url: 'https://systeminformation.io/os.html', description: 'View systeminformation document for more details' } })
