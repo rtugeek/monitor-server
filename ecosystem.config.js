@@ -4,6 +4,7 @@ module.exports = {
     script: './dist/main.js',
     watch: [
       '.',
+      'dist',
     ],
     restart_delay: 5000,
     max_restarts: 5,

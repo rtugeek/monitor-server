@@ -1,4 +1,6 @@
-import { Controller, Get, Query, Req, UseGuards } from '@nestjs/common'
+import fs from 'node:fs'
+import path from 'node:path'
+import { Body, Controller, Get, Post, Query, Req, UseGuards } from '@nestjs/common'
 import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger'
 import { Request } from 'express'
 import * as si from 'systeminformation'
@@ -7,16 +9,43 @@ import { AuthGuard } from './auth.guard'
 import { Example } from './example'
 import { TokenService } from './token.service'
 
+const backupFilePath = path.resolve(__dirname, 'backup.json')
+
 @Controller()
 @ApiQuery({ name: 'token', description: 'Auth token, get this from console log', required: true })
 @UseGuards(AuthGuard)
 export class AppController {
   constructor(private readonly tokenService: TokenService) {}
 
+  @ApiOperation({ tags: ['Server'], description: 'Update request token' })
   @Get('/token')
   updateToken(@Query('newToken') newToken: string) {
     this.tokenService.updateToken(newToken)
     return { msg: 'ok' }
+  }
+
+  @ApiOperation({ tags: ['Server'], description: 'Backup server data from client' })
+  @Post('/servers')
+  saveServers(@Body() serverData: any) {
+    fs.writeFileSync(backupFilePath, JSON.stringify(serverData, null, 2), 'utf8')
+    return { msg: 'ok' }
+  }
+
+  @ApiOperation({ tags: ['Server'], description: 'Get ' })
+  @ApiResponse({ example: Example.servers })
+  @Get('/servers')
+  getServers() {
+    if (fs.existsSync(backupFilePath)) {
+      const content = fs.readFileSync(backupFilePath, 'utf8')
+      if (content) {
+        try {
+          return JSON.parse(content)
+        }
+        catch (e) {
+        }
+      }
+    }
+    return []
   }
 
   @Get('/os')
