@@ -19,6 +19,6 @@ RUN pnpm install
 # 容器启动时运行
 CMD ["node" ,"main"]
 
-# 暴露 3000 端口
-EXPOSE 3000
+# 暴露 5549 端口
+EXPOSE 5549
 

@@ -1,0 +1,19 @@
+{
+  "fileMap": [
+    {
+      "src": "./dist/",
+      "dest": "/www/wwwroot/widgetjs.cn/monitor/server/dist/"
+    },
+    {
+      "src": "ecosystem.config.js",
+      "dest": "/www/wwwroot/widgetjs.cn/monitor/server/ecosystem.config.js"
+    },
+    {
+      "src": "package.json",
+      "dest": "/www/wwwroot/widgetjs.cn/monitor/server/package.json"
+    }
+  ],
+  "ftpConfig": {
+    "host": ["mine"]
+  }
+}

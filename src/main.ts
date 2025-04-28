@@ -12,6 +12,13 @@ async function bootstrap() {
   const logger = new Logger('APP')
   app.enableCors() // 允许所有站点跨域请求
 
+  const envPort = process.env.PORT?.trim()
+  const port = envPort ?? 5549
+  let basePath = process.env.BASE_PATH?.trim() ?? '/api/monitor'
+  if (!basePath.startsWith('/')) {
+    basePath = `/${basePath}`
+  }
+  app.setGlobalPrefix(basePath)
   const config = new DocumentBuilder()
     .setTitle('Monitor Server')
     .setDescription('A simple http server for monitor server status')
@@ -19,10 +26,9 @@ async function bootstrap() {
     .setContact('Neo Fu', 'https://widgetjs.cn', 'rtugeek@gmail.com')
     .build()
   const documentFactory = () => SwaggerModule.createDocument(app, config)
-  SwaggerModule.setup('api', app, documentFactory)
+  const docPath = `${basePath}/doc`.replace('//', '/')
+  SwaggerModule.setup(docPath, app, documentFactory)
 
-  const envPort = process.env.PORT?.trim()
-  const port = envPort ?? 3000
   await app.listen(port)
 
   const tokenService = app.get(TokenService)
@@ -31,6 +37,6 @@ async function bootstrap() {
   logger.log('↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓')
   logger.log(tokenService.token)
   logger.log('↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑')
-  logger.log(`Open http://localhost:${port}/api to see the api doc`)
+  logger.log(`Open http://localhost:${port}${docPath} to see the api doc`)
 }
 bootstrap()
